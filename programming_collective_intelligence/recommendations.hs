@@ -64,8 +64,11 @@ sim_pearson p1ranks p2ranks =
         den = sqrt $ (sum1sq - sum1 ** 2 / n) * (sum2sq - sum2 ** 2 / n)
         r = num / den
 
-calc_sim f p1 p2 =
-  f p1_ranks p2_ranks
+-- default similarity algorithm
+sim = sim_pearson
+
+calc_sim p1 p2 =
+  sim p1_ranks p2_ranks
   where p1_movies = prefs Map.! p1
         p2_movies = prefs Map.! p2
         p1_ranks = Map.elems $ Map.intersection p1_movies p2_movies
@@ -74,5 +77,10 @@ calc_sim f p1 p2 =
 topMatches prefs person n =
   take n (reverse $ sort scores)
   where others = filter ((/=) person) (Map.keys prefs)
-        scores = [(calc_sim sim_pearson person other, other) | other <- others]
+        scores = [(calc_sim person other, other) | other <- others]
 
+-- getRecommendations prefs person =
+--   reverse $ sort rankings
+--   where others = filter ((/=) person) (Map.keys prefs)
+--         simSum item = 1
+--         rankings = [(total / simSum item, item) | (item, total) <- items]
