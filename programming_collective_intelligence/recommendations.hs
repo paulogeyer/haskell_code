@@ -18,7 +18,7 @@ prefs = Map.fromList
 
 sim_pearson :: [Double] -> [Double] -> Double
 sim_pearson p1ranks p2ranks =
-  if n /=0
+  if n /= 0
   then r
   else 0.0
   where n = fromIntegral $ length p1ranks
