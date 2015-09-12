@@ -16,26 +16,24 @@ prefs = Map.fromList
                                         , ("You, Me and Dupree", 3.5)])
         ]
 
--- sim_pearson :: Map [Char] a -> String -> String -> Double
-sim_pearson prefs p1 p2 =
-  if siLength > 0 && den /= 0
+sim_pearson :: [Double] -> [Double] -> Double
+sim_pearson p1ranks p2ranks =
+  if n /=0
   then r
   else 0.0
-  where p1Movies = prefs Map.! p1
-        p2Movies = prefs Map.! p2
-        p1Movies_rates = Map.elems $ Map.intersection p1Movies p2Movies
-        p2Movies_rates = Map.elems $ Map.intersection p2Movies p1Movies
-        si :: [String]
-        si = Map.keys p1Movies `intersect` Map.keys p2Movies
-        siLength :: Double
-        siLength = fromIntegral $ length si
-        sum1 :: Double
-        sum1 = sum p1Movies_rates
-        sum2 :: Double
-        sum2 = sum p2Movies_rates
-        sum1sq = sum $ map (**2) p1Movies_rates
-        sum2sq = sum $ map (**2) p2Movies_rates
-        pSum = sum $ zipWith (*) p1Movies_rates p2Movies_rates
-        num = pSum - ((sum1 * sum2) / siLength)
-        den = sqrt $ (sum1sq - sum1 ** 2 / siLength) * (sum2sq - sum2 ** 2 / siLength)
+  where n = fromIntegral $ length p1ranks
+        sum1 = sum p1ranks
+        sum2 = sum p2ranks
+        sum1sq = sum $ map (**2) p1ranks
+        sum2sq = sum $ map (**2) p2ranks
+        pSum = sum $ zipWith (*) p1ranks p2ranks
+        num = pSum - ((sum1 * sum2) / n)
+        den = sqrt $ (sum1sq - sum1 ** 2 / n) * (sum2sq - sum2 ** 2 / n)
         r = num / den
+
+calc_sim =
+  sim_pearson p1_ranks p2_ranks
+  where p1_movies = prefs Map.! "Gene Seymour"
+        p2_movies = prefs Map.! "Lisa Rose"
+        p1_ranks = Map.elems $ Map.intersection p1_movies p2_movies
+        p2_ranks = Map.elems $ Map.intersection p2_movies p1_movies
